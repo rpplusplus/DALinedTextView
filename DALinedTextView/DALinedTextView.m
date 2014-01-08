@@ -21,6 +21,20 @@
 
 @implementation DALinedTextView
 
+- (void) setLineHeight:(CGFloat)lineHeight
+{
+    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+    paragraphStyle.lineHeightMultiple = lineHeight;
+    paragraphStyle.maximumLineHeight = lineHeight;
+    paragraphStyle.minimumLineHeight = lineHeight;
+    NSDictionary *attribute = @{
+                                NSParagraphStyleAttributeName : paragraphStyle,
+                                };
+    self.attributedText = [[NSAttributedString alloc] initWithString:self.text
+                                                          attributes:attribute];
+    _lineHeight = lineHeight;
+}
+
 + (void)initialize
 {
     if (self == [DALinedTextView class])
@@ -45,7 +59,7 @@
         UIFont *font = self.font;
         self.font = nil;
         self.font = font;
-                
+        self.lineWidth = 1;
         // We need to grab the underlying webView
         // And resize it along with the margins
         if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0") == NO) {
@@ -93,18 +107,36 @@
         
         // Create un-mutated floats outside of the for loop.
         // Reduces memory access.
-        CGFloat baseOffset = 7.0f + self.font.descender;
+        CGFloat baseOffset = 7 + self.font.descender;
         CGFloat screenScale = [UIScreen mainScreen].scale;
         CGFloat boundsX = self.bounds.origin.x;
         CGFloat boundsWidth = self.bounds.size.width;
         
         // Only draw lines that are visible on the screen.
         // (As opposed to throughout the entire view's contents)
-        NSInteger firstVisibleLine = MAX(1, (self.contentOffset.y / self.font.lineHeight));
-        NSInteger lastVisibleLine = ceilf((self.contentOffset.y + self.bounds.size.height) / self.font.lineHeight);
+        
+        CGContextSetLineWidth(context, self.lineWidth);
+        
+        if (self.drawLineDash)
+        {
+            float lengths[] = {2,2};
+            CGContextSetLineDash(context, 0, lengths,2);
+        }
+        
+        CGFloat kDelta = 0;
+        if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"6.0"))
+        {
+            if (self.lineHeight != 0)
+            {
+                kDelta = self.lineHeight - self.font.lineHeight;
+            }
+        }
+        
+        NSInteger firstVisibleLine = MAX(1, (self.contentOffset.y / (self.font.lineHeight+kDelta)));
+        NSInteger lastVisibleLine = ceilf((self.contentOffset.y + self.bounds.size.height) / (self.font.lineHeight+kDelta));
         for (NSInteger line = firstVisibleLine; line <= lastVisibleLine; ++line)
         {
-            CGFloat linePointY = (baseOffset + (self.font.lineHeight * line));
+            CGFloat linePointY = (baseOffset + ((kDelta+self.font.lineHeight) * line));
             // Rounding the point to the nearest pixel.
             // Greatly reduces drawing time.
             CGFloat roundedLinePointY = roundf(linePointY * screenScale) / screenScale;

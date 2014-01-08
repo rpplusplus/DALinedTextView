@@ -21,19 +21,23 @@
 {
     [super viewDidLoad];
     
+    
     self.textView = [[DALinedTextView alloc] init];
+    self.textView.verticalLineColor = nil;
+    self.textView.horizontalLineColor = [UIColor colorWithWhite:.94 alpha:1];
+
     self.textView.frame = self.view.bounds;
     self.textView.autoresizingMask = (UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth);
     [self.view addSubview:self.textView];
-    
+    self.textView.margins = UIEdgeInsetsZero;
     self.textView.text =
-    @"DALinedTextView"
-    @"\n\n\n"
-    @"`DALinedTextView` is a `UITextView` subclass that draws ruled lines to the view, similar to iOS' built-in Notes app. The lines conform to the appropriate line-height for the currently set `UIFont`."
-    @"\n\n"
-    @"`DALinedTextView` is special because it was built with performance and appropriate behavior in mind. Most Q&A and OSS solutions involve image-based backgrounds or overzealous drawing code. For most applications such implementations are great, but `DALinedTextView` was built with 1000-line (or more) `UITextView`s in mind."
-    @"\n\n"
-    @"Performance decisions are commented so as to provide insight into the thought process behind `DALinedTextView`. The current `-drawRect:` implementation takes as little as 1ms on an iPhone 5.";
+    @"我爱北京天安门\n天安门上太阳升\n伟大领袖毛主席\n指引我们向前进\n我爱北京天安门\n天安门上太阳升\n伟大领袖毛主席\n指引我们向前进\n我爱北京天安门\n天安门上太阳升\n伟大领袖毛主席\n指引我们向前进\n我爱北京天安门\n天安门上太阳升\n伟大领袖毛主席\n指引我们向前进\n我爱北京天安门\n天安门上太阳升\n伟大领袖毛主席\n指引我们向前进\n我爱北京天安门\n天安门上太阳升\n伟大领袖毛主席\n指引我们向前进\n我爱北京天安门\n天安门上太阳升\n伟大领袖毛主席\n指引我们向前进\n我爱北京天安门\n天安门上太阳升\n伟大领袖毛主席\n指引我们向前进\n我爱北京天安门\n天安门上太阳升\n伟大领袖毛主席\n指引我们向前进\n我爱北京天安门\n天安门上太阳升\n伟大领袖毛主席\n指引我们向前进\n我爱北京天安门\n天安门上太阳升\n伟大领袖毛主席\n指引我们向前进\n我爱北京天安门\n天安门上太阳升\n伟大领袖毛主席\n指引我们向前进\n我爱北京天安门\n天安门上太阳升\n伟大领袖毛主席\n指引我们向前进\n我爱北京天安门\n天安门上太阳升\n伟大领袖毛主席\n指引我们向前进\n";
+    
+    self.textView.lineHeight = 35;
+    self.textView.drawLineDash = YES;
+    self.textView.lineWidth = 2;
+    
+    self.textView.font = [UIFont systemFontOfSize:15];
 }
 
 @end
